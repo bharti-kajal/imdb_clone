@@ -137,8 +137,6 @@ function showMovieDetails(movieId) {
 
 // Function to load movie details
 async function loadMovieDetails() {
-    document.getElementById("loaderDiv").style.display = "none";
-    document.getElementById("movieDetails").style.display = "block";
 
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = urlParams.get('movie_id');
