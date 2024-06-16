@@ -4,12 +4,23 @@ const search_list = document.getElementById('search-list');
 
 // Load Omdb Api data according to Search Result
 async function loadOmdbApi(search_val){
-    const url = `https://www.omdbapi.com/?s=${search_val}&page=1&apikey=${apiKey}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    if(search_val)
+    {
+        const url = `https://www.omdbapi.com/?s=${search_val}&page=1&apikey=${apiKey}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-    if(data.Response === "True") {
-        showMovieList(data.Search);
+        if(data.Response === "True") {
+            showMovieList(data.Search);
+        }
+        else
+        {
+            search_list.innerHTML = '<h2 class="text-center bg-white p-4 mt-4 shadow rounded">No movies found.</h2>';
+        }
+    }
+    else
+    {
+        search_list.innerHTML = '<h2 class="text-center bg-white p-4 mt-4 shadow rounded">Movie search results are displayed here.</h2>';
     }
 }
 
@@ -34,7 +45,7 @@ function showMovieList(movies) {
                         <h5 class="card-title">${movie.Title}</h5>
                         <div class="d-flex justify-content-between align-items-center mt-2">
                             <span>${movie.Year}</span>
-                            <a onclick="event.stopPropagation(); addToWatchlist('${movie.imdbID}')" class="badge bg-dark p-2"><i class="fa fa-plus"></i> Favourite </a>
+                            <a onclick="event.stopPropagation(); addToFavourite('${movie.imdbID}')" class="badge bg-dark p-2"><i class="fa fa-plus"></i> Favourite </a>
                         </div>
                     </div>
                 </div>
@@ -46,14 +57,14 @@ function showMovieList(movies) {
 }
 // End 
 
-// Add To WatchList
-function addToWatchlist(movieID) {
+// Add To Favourite
+function addToFavourite(movieID) {
     let favoriteMovies = JSON.parse(localStorage.getItem('favoriteMovies')) || [];
     if (favoriteMovies.includes(movieID)) {
         favoriteMovies = favoriteMovies.filter(id => id !== movieID);
     } else {
         favoriteMovies.push(movieID);
-        alert("Movie Added to My favourite movies list Successfully");
+        alert("Movie Added to favourite movies list Successfully");
     }
     localStorage.setItem('favoriteMovies', JSON.stringify(favoriteMovies));
 }
@@ -67,30 +78,29 @@ async function loadApi(movieID){
     return data;
 }
 
-// Load Watchlist Page Function
-function loadWatchList() {
+// Load Favourite Page Function
+function loadFavourite() {
     let favoriteMovies = JSON.parse(localStorage.getItem('favoriteMovies')) || [];
-    if(favoriteMovies.length > 0) {
-        const fav_search_list = document.getElementById('fav-search-list');
-        fav_search_list.innerHTML = "";
+    const fav_search_list = document.getElementById('fav-search-list');
+    fav_search_list.innerHTML = "";
 
+    if (favoriteMovies.length > 0) {
         favoriteMovies.forEach(movieID => {
             loadApi(movieID).then(movieData => {
-
                 let moviePoster = movieData.Poster !== "N/A" ? movieData.Poster : "./image/no-poster-available.jpg";
                 let favMovieListItem = `
                     <div class="col-sm-4">
                         <div class="container-card shadow-lg" onclick="showMovieDetails('${movieData.imdbID}')">
-                         <div class="card-body">
-                            <div class="image-container mb-3">
-                                <img src="${moviePoster}" alt="${movieData.Title}">
-                            </div>
-                           
+                            <div class="card-body">
+                                <div class="image-container mb-3">
+                                    <img src="${moviePoster}" alt="${movieData.Title}">
+                                </div>
                                 <h5 class="card-title">${movieData.Title}</h5>
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <span>${movieData.Year}</span>
-                                    <a onclick="event.stopPropagation(); removeFav('${movieData.imdbID}')" class="badge bg-danger p-2"><i class="fa fa-trash"></i>   
-                                    Remove</a>
+                                    <a onclick="event.stopPropagation(); removeFav('${movieData.imdbID}')" class="badge bg-danger p-2">
+                                        <i class="fa fa-trash"></i> Remove
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -100,17 +110,22 @@ function loadWatchList() {
                 fav_search_list.innerHTML += favMovieListItem;
             });
         });
+    } else {
+        let favMovieListItem = `<h2 class="text-center bg-white p-4 mt-4 shadow rounded">No favorite movies added yet.</h2>`;
+        fav_search_list.innerHTML += favMovieListItem;
     }
 }
 
-// Remove From Watchlist
+
+
+// Remove From Favourite
 function removeFav(movie_id) {
     let favoriteMovies = JSON.parse(localStorage.getItem('favoriteMovies')) || [];
     const index = favoriteMovies.indexOf(movie_id);
     if (index > -1) {
         favoriteMovies.splice(index, 1);
     }
-    alert("Movie Remove from Watchlist Successfully.");
+    alert("Movie Remove from Favourite Successfully.");
     localStorage.setItem('favoriteMovies', JSON.stringify(favoriteMovies));
     location.reload();    
 }
@@ -147,15 +162,15 @@ async function loadMovieDetails() {
                         <div class="d-flex justify-content-between align-items-center">
                             <p class="card-text mb-0"><i class="fa fa-star"></i> ${movieData.imdbRating}</p>
                             <div>
-                                <a onclick="event.stopPropagation(); addToWatchlist('${movieData.imdbID}')" class="badge bg-dark p-2 m-2 text-end"><i class="fa fa-plus"></i> Watchlist</a>
+                                <a onclick="event.stopPropagation(); addToFavourite('${movieData.imdbID}')" class="badge bg-dark p-2 m-2 text-end"><i class="fa fa-plus"></i> Favourite</a>
                             </div>
                         </div>
                         <p class="card-text mb-2"><strong>Director:</strong> <span>${movieData.Director}</span></p>
                         <p class="card-text mb-2"><strong>Writer:</strong> <span>${movieData.Writer}</span></p>
-                        <p class="card-text mb-2"><strong>Actors:</strong> <span>${movieData.Actors}</span></p>
+                        <p class="card-text mb-2"><strong>Actors:</strong> <span>${movieData.Actors}</span></p><p></p>
                         <p class="card-text mb-2"><strong>Genre:</strong> <span>${movieData.Genre}</span></p>
                         <p class="card-text mb-2"><strong>Released:</strong> <span>${movieData.Released}</span></p>
-                        <p class="card-text mb-2"><strong>Runtime:</strong> <span>${movieData.Runtime}</span></p>
+                        <p class="card-text mb-2"><strong>Runtime:</strong> <span>${movieData.Runtime}</span></p><p></p>
                         <p class="card-text mb-3"><strong>Plot:</strong> <span>${movieData.Plot}</span></p>
                         <p class="card-text"><i class="fa fa-trophy"></i> <span>${movieData.Awards}</span></p>
                     </div>
