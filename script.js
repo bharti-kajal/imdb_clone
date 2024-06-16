@@ -34,7 +34,7 @@ function showMovieList(movies) {
                         <h5 class="card-title">${movie.Title}</h5>
                         <div class="d-flex justify-content-between align-items-center mt-2">
                             <span>${movie.Year}</span>
-                            <a onclick="event.stopPropagation(); addToWatchlist('${movie.imdbID}')" class="badge bg-dark p-2"><i class="fa-regular fa-plus"></i> Favourite </a>
+                            <a onclick="event.stopPropagation(); addToWatchlist('${movie.imdbID}')" class="badge bg-dark p-2"><i class="fa fa-plus"></i> Favourite </a>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ function loadWatchList() {
                                 <h5 class="card-title">${movieData.Title}</h5>
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <span>${movieData.Year}</span>
-                                    <a onclick="event.stopPropagation(); removeFav('${movieData.imdbID}')" class="badge bg-danger p-2"><i class="fa-regular fa-trash-can"></i>   
+                                    <a onclick="event.stopPropagation(); removeFav('${movieData.imdbID}')" class="badge bg-danger p-2"><i class="fa fa-trash"></i>   
                                     Remove</a>
                                 </div>
                             </div>
@@ -145,9 +145,9 @@ async function loadMovieDetails() {
                     <div class="card-body">
                         <h3 class="card-title">${movieData.Title}</h3>
                         <div class="d-flex justify-content-between align-items-center">
-                            <p class="card-text mb-0"><i class="fa-solid fa-star"></i> ${movieData.imdbRating}</p>
+                            <p class="card-text mb-0"><i class="fa fa-star"></i> ${movieData.imdbRating}</p>
                             <div>
-                                <a onclick="event.stopPropagation(); addToWatchlist('${movieData.imdbID}')" class="badge bg-dark p-2 m-2 text-end"><i class="fa-regular fa-plus"></i> Watchlist</a>
+                                <a onclick="event.stopPropagation(); addToWatchlist('${movieData.imdbID}')" class="badge bg-dark p-2 m-2 text-end"><i class="fa fa-plus"></i> Watchlist</a>
                             </div>
                         </div>
                         <p class="card-text mb-2"><strong>Director:</strong> <span>${movieData.Director}</span></p>
@@ -157,7 +157,7 @@ async function loadMovieDetails() {
                         <p class="card-text mb-2"><strong>Released:</strong> <span>${movieData.Released}</span></p>
                         <p class="card-text mb-2"><strong>Runtime:</strong> <span>${movieData.Runtime}</span></p>
                         <p class="card-text mb-3"><strong>Plot:</strong> <span>${movieData.Plot}</span></p>
-                        <p class="card-text"><i class="fa-solid fa-award"></i> <span>${movieData.Awards}</span></p>
+                        <p class="card-text"><i class="fa fa-trophy"></i> <span>${movieData.Awards}</span></p>
                     </div>
                 </div>
             </div>
